@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: checklist_postgres
+    environment:
+      POSTGRES_DB: checklistdb
+      POSTGRES_USER: checklist_user
+      POSTGRES_PASSWORD: checklist_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - checklist_pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: checklist_api
+    depends_on:
+      - postgres
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=checklistdb;Username=checklist_user;Password=checklist_password
+      Jwt__Issuer: ChecklistProductivityApi
+      Jwt__Audience: ChecklistProductivityClient
+      Jwt__Key: change-this-development-key-with-at-least-32-characters
+      Jwt__ExpiresInMinutes: 120
+    ports:
+      - "8080:8080"
+
+volumes:
+  checklist_pgdata:

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checklist Productivity - Login</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f6f8; margin: 0; display: grid; place-items: center; min-height: 100vh; }
+    main { width: min(420px, 92vw); background: #fff; padding: 28px; border-radius: 14px; box-shadow: 0 12px 40px rgba(0,0,0,.08); }
+    h1 { margin-top: 0; }
+    label { display:block; font-weight: 700; margin-top: 14px; }
+    input { width: 100%; box-sizing: border-box; padding: 12px; margin-top: 6px; border: 1px solid #ccd3db; border-radius: 8px; }
+    button { width: 100%; padding: 12px; margin-top: 18px; border: 0; border-radius: 8px; background: #111827; color: #fff; font-weight: 700; cursor: pointer; }
+    pre { background: #111827; color: #d1fae5; padding: 12px; border-radius: 8px; overflow-x: auto; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Login</h1>
+    <p>Use esta tela simples para testar a lógica de autenticação da API.</p>
+
+    <label for="email">E-mail</label>
+    <input id="email" type="email" value="daniel@email.com" />
+
+    <label for="password">Senha</label>
+    <input id="password" type="password" value="Senha@12345" />
+
+    <button onclick="login()">Entrar</button>
+    <button onclick="register()" style="background:#374151">Cadastrar usuário teste</button>
+
+    <h2>Resposta</h2>
+    <pre id="output">Aguardando ação...</pre>
+  </main>
+
+  <script>
+    async function register() {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Daniel',
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value
+        })
+      });
+      document.getElementById('output').textContent = JSON.stringify(await response.json(), null, 2);
+    }
+
+    async function login() {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value
+        })
+      });
+      document.getElementById('output').textContent = JSON.stringify(await response.json(), null, 2);
+    }
+  </script>
+</body>
+</html>
